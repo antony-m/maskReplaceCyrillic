@@ -2,7 +2,7 @@
 
     "use strict";
     $.fn.maskReplaceCyrillic = function(mask) {
-
+        var $this = $(this);
         var definitions = {
             '9': "[0-9]",
             'a': "[A-Za-z]",
@@ -79,9 +79,8 @@
             }
         }
 
-
         //take text selection range 
-        $(this).select(function(e) {
+        $this.select(function(e) {
 
             function getInputSelection(el) {
                 var start = 0,
@@ -132,7 +131,6 @@
                 };
             }
 
-
             start = getInputSelection(this).start;
             end = getInputSelection(this).end;
             selectionLength = end - start;
@@ -159,21 +157,21 @@
         });
 
 
-        $(this).on("blur focus mousedown", function() {
+        $this.on("blur focus mousedown", function() {
             selectionLength = null;
             start = null;
             end = null;
         });
 
         //reformat on paste
-        $(this).on('paste', function(e) {
-
+        $this.on('paste', function(e) {
+            var self = this;
             if (!start && !end) {
                 start = 1;
                 end = 1;
             }
 
-            var self = this;
+            var $self = $(self);
             var original = e.originalEvent;
             var val = null;
 
@@ -186,10 +184,10 @@
 
             //check if text input value is correct when pasting
             function reformatInputValuePaste() {
-                var currentCaretPos = $(self).caret().begin;
+                var currentCaretPos = $self.caret().begin;
                 var caretEndPosition = end + val.length - (end - start);
 
-                var a = $(self).val();
+                var a = $self.val();
                 var b = val;
                 var out;
 
@@ -210,8 +208,8 @@
                         return false;
                     }
                 }
-                $(self).val(out);
-                $(self).caret(caretEndPosition);
+                $self.val(out);
+                $self.caret(caretEndPosition);
 
             }
 
@@ -224,10 +222,10 @@
         });
 
 
-        $(this).on('keydown', function(e) {
+        $this.on('keydown', function(e) {
             var self = this;
-
-            var currentCaretPos = $(this).caret().begin;
+            var $self = $(self);
+            var currentCaretPos = $this.caret().begin;
 
             //check if text value matches mask requirements
             function maskCheck() {
@@ -240,7 +238,7 @@
                     inputC = '';
                 }
 
-                var aa = $(self).val();
+                var aa = $self.val();
                 var bb = map[e.keyCode.toString()] || inputC;
                 var out;
                 if (end - start > 0) {
@@ -266,8 +264,8 @@
                                 return false;
                             }
                         }
-                        $(self).val(out);
-                        $(self).caret(start);
+                        $self.val(out);
+                        $self.caret(start);
                     } else {
                         out = [aa.slice(0, currentCaretPos), bb, aa.slice(currentCaretPos + 1)].join('');
                         for (i = 0; i < out.length; i++) {
@@ -281,8 +279,8 @@
                                 return false;
                             }
                         }
-                        $(self).val(out);
-                        $(self).caret(currentCaretPos);
+                        $self.val(out);
+                        $self.caret(currentCaretPos);
                     }
                     selectionLength = null;
                     start = null;
@@ -304,8 +302,8 @@
                                 return false;
                             }
                         }
-                        $(self).val(out);
-                        $(self).caret(start);
+                        $self.val(out);
+                        $self.caret(start);
                     } else {
                         out = [aa.slice(0, currentCaretPos - 1), bb, aa.slice(currentCaretPos)].join('');
                         for (i = 0; i < out.length; i++) {
@@ -319,8 +317,8 @@
                                 return false;
                             }
                         }
-                        $(self).val(out);
-                        $(self).caret(currentCaretPos - 1);
+                        $self.val(out);
+                        $self.caret(currentCaretPos - 1);
 
                     }
                     selectionLength = null;
@@ -391,13 +389,13 @@
                     return false;
                 }
 
-                var strValue = $(this).val();
+                var strValue = $this.val();
                 var strTail = strValue.substring(end);
                 strValue = strValue.slice(0, start);
                 strValue += strTail;
-                $(this).val(strValue);
+                $this.val(strValue);
 
-                $(this).caret(currentCaretPos);
+                $this.caret(currentCaretPos);
                 selectionLength = null;
             }
 
@@ -410,11 +408,11 @@
 
                 e.preventDefault();
 
-                currentCaretPos = $(this).caret().begin;
+                currentCaretPos = $this.caret().begin;
 
                 var inputChar = String.fromCharCode((96 <= charCode && charCode <= 105) ? charCode - 48 : charCode);
 
-                str = $(this).val();
+                str = $this.val();
                 if (currentCaretPos === str.length) {
                     var r = '';
                     if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
@@ -422,9 +420,9 @@
                     } else {
                         r += str + map[charCode.toString()] || charCode.toString();
                     }
-                    $(this).val(r);
+                    $this.val(r);
 
-                    $(this).caret(currentCaretPos + 1);
+                    $this.caret(currentCaretPos + 1);
 
                 } else {
                     if (!selectionLength || selectionLength === 0) {
@@ -434,15 +432,15 @@
                         } else {
                             b = map[charCode.toString()] || charCode.toString();
                         }
-                        var a = $(this).val();
+                        var a = $this.val();
                         var output = [a.slice(0, currentCaretPos), b, a.slice(currentCaretPos)].join('');
 
                         if (output.length > mask.length) {
                             return false;
                         }
 
-                        $(this).val(output);
-                        $(this).caret(currentCaretPos + 1);
+                        $this.val(output);
+                        $this.caret(currentCaretPos + 1);
                     }
                 }
             }

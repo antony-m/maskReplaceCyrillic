@@ -13,4 +13,4 @@ The plugin takes up mask, which may contain any number of characters: a, 9, or *
     ```
 Definitions are: '9': "[0-9]", 'a': "[A-Za-z]", '*': "[A-Za-z0-9]";
 
-Demo: https://jsfiddle.net/yw7rmo5g/
+Demo: https://jsfiddle.net/yw7rmo5g/2/
